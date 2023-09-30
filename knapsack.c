@@ -28,12 +28,15 @@ int knapsack_recursive(int ind, int bag_weight, int *weights, int *values);
 // knapsack_memoization fn declaration
 int knapsack_memoization(int ind, int bag_weight, int *weights, int *values, int **max_weight);
 
+// knapsack_optimised fn declaration
+int ks_opti(int n, int bag_weight, int *weights, int *values);
+
 int main(){
 
     // Get number of items to be generated
-    int n;
-    printf("Enter number of items :");
-    scanf("%d", &n);
+    int n = 10000;
+    // printf("Enter number of items :");
+    // scanf("%d", &n);
 
     // Get weight and value arrays
     int *weights = generate_num_arr(n, 1, 10);
@@ -43,9 +46,9 @@ int main(){
     //     printf("%d %d\n", weights[i], values[i]);
     // }
 
-    int bag_weight;
-    printf("Enter bag weight :");
-    scanf("%d", &bag_weight);
+    int bag_weight = 100000;
+    // printf("Enter bag weight :");
+    // scanf("%d", &bag_weight);
 
     //  Recursive knapsack function
     #ifdef KS_REC_EXISTS
@@ -68,6 +71,7 @@ int main(){
         int max_value = knapsack_memoization(n-1, bag_weight, weights, values, max_weight);
 
         printf("Max value = %d\n", max_value);
+        free(max_weight);
     #endif
 
     #ifdef KS_TAB_EXISTS
@@ -75,8 +79,12 @@ int main(){
         printf("Max value = %d\n", max_value);    
     #endif
 
+    #ifdef KS_OPTI_EXISTS
+        int max_value = ks_opti(n, bag_weight, weights, values);
+        printf("Max value = %d\n", max_value);    
+    #endif
+    
     free(weights);
     free(values);
-    // free(max_weight);
     return 0;
 }
