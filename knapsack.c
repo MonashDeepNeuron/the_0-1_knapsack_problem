@@ -5,6 +5,8 @@
 #include <math.h>
 #include <omp.h>
 #include <string.h>
+#include "ks_tabulation.h"
+
 
 // Function to generate an array of random numbers containing numbers between num_lower and num upper
 int * generate_num_arr(int n, int num_lower, int num_upper){
@@ -37,33 +39,41 @@ int main(){
     int *weights = generate_num_arr(n, 1, 10);
     int *values = generate_num_arr(n, 100, 500);
 
-    for (int i = 0; i < n; i++){
-        printf("%d %d\n", weights[i], values[i]);
-    }
+    // for (int i = 0; i < n; i++){
+    //     printf("%d %d\n", weights[i], values[i]);
+    // }
 
-    int bag_weight = 100;
+    int bag_weight;
+    printf("Enter bag weight :");
+    scanf("%d", &bag_weight);
 
-    //  UNCOMMENT below to call recursive knapsack function
-    // int max_value = knapsack_recursive(n-1, bag_weight, weights, values);
-    
-
-    //  UNCOMMENT below to call memoized knapsack function
-    // Initiliaze 2D array of size n * bag_weight+1 with all values = -1 for memoization
-    int **max_weight = (int **)malloc(n * sizeof(int *));
-    #pragma omp parallel for
-    for (int i = 0; i < n; i++){
-        max_weight[i] = (int *)malloc((bag_weight + 1) * sizeof(int));
-        memset(max_weight[i], -1, (bag_weight + 1) * sizeof(int));
-    }
-
-    // Call memoized recursive knapsack function 
-    int max_value = knapsack_memoization(n-1, bag_weight, weights, values, max_weight);
-    
+    //  Recursive knapsack function
+    #ifdef KS_REC_EXISTS
+        int max_value = knapsack_recursive(n-1, bag_weight, weights, values);
+        printf("Max value = %d\n", max_value);
+    #endif
 
 
+    //  Memoized knapsack function
+    #ifdef KS_MEM_EXISTS
+        // Initiliaze 2D array of size n * bag_weight+1 with all values = -1 for memoization
+        int **max_weight = (int **)malloc(n * sizeof(int *));
+        #pragma omp parallel for
+        for (int i = 0; i < n; i++){
+            max_weight[i] = (int *)malloc((bag_weight + 1) * sizeof(int));
+            memset(max_weight[i], -1, (bag_weight + 1) * sizeof(int));
+        }
 
+        // Call memoized recursive knapsack function 
+        int max_value = knapsack_memoization(n-1, bag_weight, weights, values, max_weight);
 
-    printf("Max value = %d", max_value);
+        printf("Max value = %d\n", max_value);
+    #endif
+
+    #ifdef KS_TAB_EXISTS
+        int max_value = knapsack_tabulation(n, bag_weight, weights, values);
+        printf("Max value = %d\n", max_value);    
+    #endif
 
     free(weights);
     free(values);

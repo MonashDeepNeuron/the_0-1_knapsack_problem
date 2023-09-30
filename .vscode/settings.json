@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "stdlib.h": "c",
-        "ks_recursive.C": "cpp"
+        "limits.h": "c",
+        "math.h": "c"
     }
 }
