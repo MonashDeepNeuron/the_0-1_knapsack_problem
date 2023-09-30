@@ -46,18 +46,18 @@ int main(){
     //  UNCOMMENT below to call recursive knapsack function
     // int max_value = knapsack_recursive(n-1, bag_weight, weights, values);
     
-    
+
     //  UNCOMMENT below to call memoized knapsack function
     // Initiliaze 2D array of size n * bag_weight+1 with all values = -1 for memoization
-    // int **max_weight = (int **)malloc(n * sizeof(int *));
-    // #pragma omp parallel for
-    // for (int i = 0; i < n; i++){
-    //     max_weight[i] = (int *)malloc((bag_weight + 1) * sizeof(int));
-    //     memset(max_weight[i], -1, (bag_weight + 1) * sizeof(int));
-    // }
+    int **max_weight = (int **)malloc(n * sizeof(int *));
+    #pragma omp parallel for
+    for (int i = 0; i < n; i++){
+        max_weight[i] = (int *)malloc((bag_weight + 1) * sizeof(int));
+        memset(max_weight[i], -1, (bag_weight + 1) * sizeof(int));
+    }
 
-    // // Call memoized recursive knapsack function 
-    // int max_value = knapsack_memoization(n-1, bag_weight, weights, values, max_weight);
+    // Call memoized recursive knapsack function 
+    int max_value = knapsack_memoization(n-1, bag_weight, weights, values, max_weight);
     
 
 

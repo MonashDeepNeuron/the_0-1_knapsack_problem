@@ -13,12 +13,12 @@ int knapsack_memoization(int ind, int bag_weight, int *weights, int *values, int
     if (max_weight[ind][bag_weight] != -1) return max_weight[ind][bag_weight];
 
     // Max weight till index ind if it is not picked
-    int notPick = 0 + knapsack_recursive(ind-1, bag_weight, weights, values);
+    int notPick = 0 + knapsack_memoization(ind-1, bag_weight, weights, values, max_weight);
     
     // Max weight till index ind if it is picked
     int pick = INT_MIN;
     if (bag_weight >= weights[ind]){
-        pick = values[ind] + knapsack_recursive(ind-1, bag_weight-weights[ind], weights, values);
+        pick = values[ind] + knapsack_memoization(ind-1, bag_weight-weights[ind], weights, values, max_weight);
     }
 
     // Return max of both cases
