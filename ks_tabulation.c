@@ -15,7 +15,8 @@ int knapsack_tabulation(int n, int bag_weight, int *weights, int *values){
 
     // Initialize first row with weights[0] if bag weight is greater than it at that instance
     for (int w = 0; w <= bag_weight; w++) max_weight[0][w] = values[0];
-
+    
+    #pragma omp parallel for
     for (int i = 1; i < n; i++) {
         #pragma omp parallel for
         for (int w = 0; w <= bag_weight; w++){
