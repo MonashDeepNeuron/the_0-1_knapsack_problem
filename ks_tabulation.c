@@ -18,7 +18,6 @@ int knapsack_tabulation(int n, int bag_weight, int *weights, int *values){
     
     #pragma omp parallel for
     for (int i = 1; i < n; i++) {
-        #pragma omp parallel for
         for (int w = 0; w <= bag_weight; w++){
             // Max weight till index ind if it is not picked
             int notPick = 0 + max_weight[i-1][w];
@@ -28,7 +27,7 @@ int knapsack_tabulation(int n, int bag_weight, int *weights, int *values){
             if (bag_weight >= weights[i]){
                 pick = values[i] + max_weight[i-1][w-weights[i]];
             }
-
+            #pragma omp critical
             max_weight[i][w] = fmax(pick, notPick);
         }
     }
